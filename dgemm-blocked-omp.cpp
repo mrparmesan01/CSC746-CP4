@@ -79,7 +79,7 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
          for(int y = 0; y < total_block_size; y++) {
             
             // Compute pointer to current block within matrix C.
-            double* c_arr_value = &C[x * n * total_block_size + y * block_size];
+            double* c_arr_value = &C[x * n * block_size + y * block_size];
 
             // Loading destination block from matrix C to local working memory
             copy(C2.data(), c_arr_value, n, block_size);
@@ -94,7 +94,7 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
             }
 
             // Writes the accumulated result from local memory back to global memory.
-            write(c_arr_value, C2, n, block_size);
+            write(c_arr_value, C2.data(), n, block_size);
          }
       }
 
