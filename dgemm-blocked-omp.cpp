@@ -63,7 +63,7 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
    // std::cout << "Insert your blocked matrix multiply with copy optimization, openmp-parallel edition here " << std::endl;
 
    const int total_block_size = n / block_size;
-   const int arr_size = total_block_size * block_size;
+   const int arr_size = std::pow(block_size, 2);
 
 #pragma omp parallel
    {
