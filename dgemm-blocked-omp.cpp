@@ -70,10 +70,9 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
       LIKWID_MARKER_START(MY_MARKER_REGION_NAME);
 
       // Allocate thread-local variables to be computed in-parallel.
-      std::vector<double> buffer(arr_size * 3);
-      double* A = buffer.data();
-      double* B = buffer.data() + arr_size;
-      double* C = buffer.data() + (arr_size * 2);
+      std::vector<double> A(arr_size);
+      std::vector<double> B(arr_size);
+      std::vector<double> C(arr_size);
 
 #pragma omp for collapse(2)
       for(int x = 0; x < total_block_size; x++) {
@@ -86,16 +85,16 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
             copy(C, c_arr_value, n, block_size);
 
             // Accumulate across inner block-row/col dimensions
-            for(int z = 0; z < n; z++) {
-               copy(A, &A[x * n * block_size + z * block_size], n, block_size);
-               copy(B, &B[z * n * block_size + y * block_size], n, block_size);
+            for(int z = 0; z < total_block_size; z++) {
+               copy(A.data(), &A[(x * block_size * n) + (z * block_size)], n, block_size);
+               copy(B.data(), &B[(z * block_size * n) + (y * block_size)], n, block_size);
 
                // Computing matrix multiplication in CPU-cache (L1/L2) memory.
-               square_dgemm(block_size, A, B, C);
+               square_dgemm(block_size, A.data(), B.data(), C.data());
             }
 
             // Writes the accumulated result from local memory back to global memory.
-            write(c_arr_value, C, n, block_size);
+            write(c_arr_value, C.data(), n, block_size);
          }
       }
 
