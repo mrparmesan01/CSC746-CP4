@@ -82,7 +82,7 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
             double* c_arr_value = &C[x * n * total_block_size + y * block_size];
 
             // Loading destination block from matrix C to local working memory
-            copy(C, c_arr_value, n, block_size);
+            copy(C.data(), c_arr_value, n, block_size);
 
             // Accumulate across inner block-row/col dimensions
             for(int z = 0; z < total_block_size; z++) {
