@@ -1,6 +1,10 @@
 #include <iostream>
 #include <omp.h>
 #include "likwid-stuff.h"
+#include <cmath>
+#include <vector>
+#include <cstring>
+
 
 const char* dgemm_desc = "Basic implementation, OpenMP-enabled, three-loop dgemm.";
 

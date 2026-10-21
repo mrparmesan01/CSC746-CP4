@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <omp.h>
 #include "likwid-stuff.h"
+#include <cmath>
+#include <vector>
+#include <cstring>
 
 const char* dgemm_desc = "Blocked dgemm, OpenMP-enabled";
 
