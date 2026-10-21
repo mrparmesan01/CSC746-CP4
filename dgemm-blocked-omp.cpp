@@ -94,7 +94,7 @@ void square_dgemm_blocked(int n, int block_size, double* A, double* B, double* C
             }
 
             // Writes the accumulated result from local memory back to global memory.
-            write(c_arr_value, C.data(), n, block_size);
+            write_block(&C[Cpos], &Cn[0], n, block_size);
          }
       }
 
